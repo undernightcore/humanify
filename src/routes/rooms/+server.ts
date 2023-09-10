@@ -35,6 +35,13 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	const data = validateCreateRoomRequest(await request.json());
 
+	const model = await prisma.model.findUnique({
+		where: {
+			id: data.modelId
+		}
+	});
+	if (!model) throw error(400, `Model ${data.modelId} does not exist`);
+
 	await prisma.room.create({
 		data
 	});
